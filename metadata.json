@@ -1,0 +1,7 @@
+{
+  "name": "BreatheThrough",
+  "description": "An AI-powered crisis management and immersive therapy companion for Sickle Cell Anemia patients.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
