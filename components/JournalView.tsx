@@ -14,7 +14,7 @@ const JournalView: React.FC<JournalViewProps> = ({ entries, onAddEntry }) => {
   const [showForm, setShowForm] = useState(false);
   
   // Form State
-  const [painLevel, setPainLevel] = useState(5);
+  const [painLevel, setPainLevel] = useState(0); // Default to 0 (Wellness)
   const [notes, setNotes] = useState('');
   const [context, setContext] = useState<string>('Home');
   const [isCrisis, setIsCrisis] = useState(false);
@@ -49,7 +49,7 @@ const JournalView: React.FC<JournalViewProps> = ({ entries, onAddEntry }) => {
       setMedsTaken(existing.medsTaken || false);
       setShowForm(false);
     } else {
-      setPainLevel(5);
+      setPainLevel(0); // Default new entries to 0 (Wellness)
       setNotes('');
       setContext('Home');
       setIsCrisis(false);
@@ -111,6 +111,7 @@ const JournalView: React.FC<JournalViewProps> = ({ entries, onAddEntry }) => {
               if (entry) {
                 if (entry.painLevel > 7) indicator = 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]';
                 else if (entry.painLevel > 4) indicator = 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]';
+                else if (entry.painLevel === 0) indicator = 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]'; // Green for 0 pain
                 else indicator = 'bg-sky-500 shadow-[0_0_8px_rgba(14,165,233,0.5)]';
               }
 
@@ -140,8 +141,8 @@ const JournalView: React.FC<JournalViewProps> = ({ entries, onAddEntry }) => {
               <span className="text-[10px] text-zinc-500 uppercase font-bold">Crisis</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold">Meds Taken</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]"></div>
+              <span className="text-[10px] text-zinc-500 uppercase font-bold">Zero Pain</span>
             </div>
           </div>
         </div>
@@ -151,7 +152,7 @@ const JournalView: React.FC<JournalViewProps> = ({ entries, onAddEntry }) => {
           <h3 className="text-zinc-100 font-medium mb-4 flex items-center justify-between">
             <span className="text-sky-500 tracking-wide text-sm font-bold uppercase">{new Date(selectedDate).toLocaleDateString()}</span>
             {selectedEntry && (
-              <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full border ${selectedEntry.painLevel > 6 ? 'bg-red-900/20 text-red-400 border-red-900/40' : 'bg-sky-900/20 text-sky-400 border-sky-900/40'}`}>
+              <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full border ${selectedEntry.painLevel > 6 ? 'bg-red-900/20 text-red-400 border-red-900/40' : selectedEntry.painLevel === 0 ? 'bg-emerald-900/20 text-emerald-400 border-emerald-900/40' : 'bg-sky-900/20 text-sky-400 border-sky-900/40'}`}>
                 Pain Level: {selectedEntry.painLevel}
               </span>
             )}
@@ -160,9 +161,12 @@ const JournalView: React.FC<JournalViewProps> = ({ entries, onAddEntry }) => {
           {showForm ? (
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
               {/* Pain Slider */}
-              <label className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2 block">Pain Intensity (1-10)</label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-zinc-500 text-xs font-bold uppercase tracking-wider block">Pain Intensity (0-10)</label>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded ${painLevel === 0 ? 'text-emerald-400 bg-emerald-950/30' : 'text-sky-400 bg-sky-950/30'}`}>{painLevel}</span>
+              </div>
               <input 
-                type="range" min="1" max="10" 
+                type="range" min="0" max="10" 
                 value={painLevel} onChange={(e) => setPainLevel(parseInt(e.target.value))}
                 className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer mb-6 accent-sky-500"
               />

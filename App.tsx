@@ -23,9 +23,24 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, medications, on
     .filter(e => e.isCrisis)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
     
-  const daysSinceLastCrisis = lastCrisisEntry 
-    ? Math.floor((Date.now() - new Date(lastCrisisEntry.date).getTime()) / (1000 * 60 * 60 * 24)) 
-    : 'N/A';
+  let daysSinceLastCrisis: number | string = 'N/A';
+
+  if (lastCrisisEntry) {
+    // Robust date difference calculation that ignores timezones and hours
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Parse the entry date (YYYY-MM-DD) explicitly to avoiding timezone shifts
+    const [y, m, d] = lastCrisisEntry.date.split('-').map(Number);
+    const crisisDate = new Date(y, m - 1, d); // Month is 0-indexed in JS Date
+    crisisDate.setHours(0, 0, 0, 0);
+
+    const diffTime = today.getTime() - crisisDate.getTime();
+    daysSinceLastCrisis = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Prevent negative numbers if users log future dates by accident
+    if (daysSinceLastCrisis < 0) daysSinceLastCrisis = 0;
+  }
 
   // Logic for Historical Adherence from Journal
   const adherencePercentage = React.useMemo(() => {
