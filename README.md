@@ -41,14 +41,14 @@ Whether managing a daily medication regimen, seeking immediate triage advice, or
 *   **Styling**: TailwindCSS (Custom "Zinc & Sky" Dark Mode Theme)
 *   **AI Integration**: Google GenAI SDK (`@google/genai`)
 *   **Models**: 
-    *   `gemini-2.5-flash` (Triage & Analysis)
+    *   `gemini-3.0-flash` (Triage & Analysis)
     *   `gemini-3-pro-image-preview` (Image Generation)
 
 ## 🚀 Getting Started
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/breathethrough.git
+    git clone https://github.com/axroux/breathethrough.git
     ```
 2.  **Install dependencies**:
     ```bash
